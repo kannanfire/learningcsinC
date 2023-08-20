@@ -22,8 +22,7 @@ def lcs_memo(a: str, b: str):
     '''
     DOCSTRING
     '''
-    m = {}
-    return aux1(a, b, m)
+    return aux1(a, b, {})
 
 def aux1(a: str, b: str, m: map):
     '''
