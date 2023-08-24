@@ -1,14 +1,17 @@
 #! /usr/bin/env python3
 
+import unittest
+
 '''
-DOCSTRING
+This file is for methods to find the least common substring between two strings of varying length.
+Exploring Dynamic Programming and the methods to reduce work in this problem.
 '''
 
 def lcs(A: str, B: str):
     '''
-    DOCSTRING
+    No memoization version of LCS
     '''
-    print("A: " + A + " | B: " + B)
+    # print("A: " + A + " | B: " + B)
     if len(A) <= 0 or len(B) <= 0:
         return 0
 
@@ -20,15 +23,15 @@ def lcs(A: str, B: str):
 
 def lcs_memo(a: str, b: str):
     '''
-    DOCSTRING
+    Regular Method that calls aux for memoized version of LCS
     '''
     return aux1(a, b, {})
 
 def aux1(a: str, b: str, m: map):
     '''
-    DOCSTRING
+    Aux method for lcs_memo
     '''
-    print("A: " + a + " | B: " + b)
+    # print("A: " + a + " | B: " + b)
     if len(a) <= 0 or len(b) <= 0:
         return 0
 
@@ -42,12 +45,77 @@ def aux1(a: str, b: str, m: map):
     return m[a,b]
 
 
+'''
+the following class is to perform unit tests to verify if the methods are working appropriately.
+
+the first lcs class (not lcs_memo) is the verification that the methods are correct. If lcs_memo matchs lcs
+then this can be assumed as correct.
+'''
+
+class TestLCS(unittest.TestCase):
+
+    def testEqualLength(self):
+        a = "XYXYZAZB"
+        b = "XXYYZZAB"
+
+        self.assertEqual(lcs(a, b), lcs_memo(a, b))
+
+        c = "BABABAB"
+        d = "ABABABA"
+
+        self.assertEqual(lcs(c, d), lcs_memo(c, d))
+        
+
+    def testVaryingLength(self):
+        a = "XYXYXYXY"
+        b = "XXYYXXYYXXYYXXYYXXYYXXYY"
+
+        self.assertEqual(lcs(a, b), lcs_memo(a, b))
+
+        c = "XXXXXXX"
+        d = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+        self.assertEqual(lcs(c, d), lcs_memo(c,d))
+
+    def testZeroLength(self):
+        a = ""
+        b = "XX"
+
+        self.assertEqual(lcs(a,b), lcs_memo(a,b))
+
+        c = "YY"
+        d = ""
+
+        self.assertEqual(lcs(c,d), lcs_memo(c,d))
+
+    def testNotEqual(self):
+        a = "AAAAA"
+        b = "BBBBB"
+
+        self.assertTrue(lcs_memo(a,b) == 0)
+        self.assertFalse(lcs_memo(a,b) != 0)
+
+        self.assertEqual(lcs(a,b), lcs_memo(a,b))
+
+    def testSameValues(self):
+        a = "aaaaa"
+        b = "aaaaa"
+
+        self.assertEqual(lcs(a,b), lcs_memo(a,b))
+
+        c = "bbbbbbbbb"
+        d = "bbbbbbbbb"
+
+        self.assertEqual(lcs_memo(c,d), lcs(c,d))
+
+      
+
 if __name__ == '__main__':
     # A = "ABCADB"
     # B = "BABDCAB"
-    # print(lcs(A, len(A), B, len(B)))
-    S1 = "XYXYZ"
-    S2 = "XYABXYC"
-    print(lcs(S1, S2))
-    print("--------------------------------------------------\n\n")
-    print(lcs_memo(S1, S2))
+    unittest.main()
+    # S1 = "XYXYZ"
+    # S2 = "XYABXYC"
+    # print(lcs(S1, S2))
+    # print("--------------------------------------------------\n\n")
+    # print(lcs_memo(S1, S2))
