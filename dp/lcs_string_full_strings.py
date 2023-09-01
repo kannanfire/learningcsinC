@@ -7,7 +7,38 @@ This file is for methods to find the least common substring between two strings 
 Exploring Dynamic Programming and the methods to reduce work in this problem.
 '''
 
-def lcs(A: str, B: str):
+
+
+def printArr(arr: list):
+    for i in arr:
+        print(i)
+
+def lcs1(a: str, b: str):
+    arr  = [[0 for j in range(len(b)+1)] for i in range(len(a)+1)]
+    
+    for i in range(1, len(a)+1):
+        for j in range(1,len(b)+1):
+            if a[i-1] == b[j-1]:
+                arr[i][j] = arr[i-1][j-1] + 1
+            else:
+                arr[i][j] = max(arr[i-1][j], arr[i][j-1])
+
+    printArr(arr)
+                    
+def laux(a: str, b: str, arr: list):
+    print('a: ' + a)
+    print('b: ' + b)
+    printArr(arr)
+    if len(a) <= 0 or len(b) <= 0:
+        return 0
+    if a[-1] == b[-1]:
+        arr[len(a)][len(b)] = arr[len(a)][len(b)+1] + 1
+        return laux(a[0:-1], b[0:-1], arr)
+
+    arr[len(a)][len(b)] = max(laux(a[0:-1], b, arr), laux(a, b[0:-1], arr))
+    return arr[len(a)][len(b)]
+
+def lcs(A: str, B: str, S: set):
     '''
     No memoization version of LCS
     '''
@@ -124,12 +155,10 @@ class TestLCS(unittest.TestCase):
       
 
 if __name__ == '__main__':
-    # A = "ABCADB"
-    # B = "BABDCAB"
-    unittest.main()
-    # S1 = "XYXYZ"
-    # S2 = "XYABXYC"
-    # print(lcs(S1, S2))
-    # print("--------------------------------------------------\n\n")
-    # print(lcs_memo(S1, S2))
-    
+    a = "xyxyz"
+    b = "xyabxyc"
+    # unittest.main()
+    print()
+    arr = lcs1(a,b)
+    print()
+    lcs1("abcd", "dcba")
