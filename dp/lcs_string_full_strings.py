@@ -10,6 +10,7 @@ Exploring Dynamic Programming and the methods to reduce work in this problem.
 
 
 def printArr(arr: list):
+    print()
     for i in arr:
         print(i)
 
@@ -23,58 +24,43 @@ def lcs1(a: str, b: str):
             else:
                 arr[i][j] = max(arr[i-1][j], arr[i][j-1])
 
+
     printArr(arr)
-                    
-def laux(a: str, b: str, arr: list):
-    print('a: ' + a)
-    print('b: ' + b)
-    printArr(arr)
-    if len(a) <= 0 or len(b) <= 0:
-        return 0
-    if a[-1] == b[-1]:
-        arr[len(a)][len(b)] = arr[len(a)][len(b)+1] + 1
-        return laux(a[0:-1], b[0:-1], arr)
+    print("a: " + a + " b: " + b)
+    # ret = ""
+    # curr = 0
+    # for i in range(1,len(arr)):
+    #     for j in range(1,len(arr[0])):
+    #         if arr[i][j] > curr:
+    #             ret += a[i-1]
+    #             curr = arr[i][j]
+    #         else:
 
-    arr[len(a)][len(b)] = max(laux(a[0:-1], b, arr), laux(a, b[0:-1], arr))
-    return arr[len(a)][len(b)]
+    ret = aux(a,b,arr,len(arr)-1,len(arr[0])-1)      
+    print(ret)
+    # print(ret)
 
-def lcs(A: str, B: str, S: set):
-    '''
-    No memoization version of LCS
-    '''
-    # print("A: " + A + " | B: " + B)
-    if len(A) <= 0 or len(B) <= 0:
-        return 0
+def aux(a: str, b: str, arr: list, i: int, j: int) -> str:
+    if i <= 0 or j <= 0 or arr[i][j] == 0:
+        return [""]
 
-    if A[-1] == B[-1]:
-        return lcs(A[0:-1], B[0:-1]) + 1
-
-    return max(lcs(A[0:-1], B), lcs(A, B[0:-1]))
-
-
-def lcs_memo(a: str, b: str):
-    '''
-    Regular Method that calls aux for memoized version of LCS
-    '''
-    return aux1(a, b, {})
-
-def aux1(a: str, b: str, m: map):
-    '''
-    Aux method for lcs_memo
-    '''
-    # print("A: " + a + " | B: " + b)
-    if len(a) <= 0 or len(b) <= 0:
-        return 0
-
-    if (a,b) in m:
-        return m[a,b]
-
-    if a[-1] == b[-1]:
-        m[a,b] = aux1(a[0:-1], b[0:-1], m) + 1
+    if a[i-1] == b[j-1]:
+        return [x + a[i-1] for x in aux(a, b, arr, i-1, j-1)]
     else:
-        m[a,b] = max(aux1(a[0:-1], b, m), aux1(a, b[0:-1], m))
-    return m[a,b]
+        if arr[i-1][j] > arr[i][j-1]:
+            return aux(a, b, arr, i-1, j)
+        elif arr[i-1][j] < arr[i][j-1]:
+            return aux(a, b, arr, i, j-1)
+        else:
+            # v1 = aux(a,b,arr,i-1,j)
+            # v2 = aux(a,b,arr,i,j-1)
 
+            # if v1 == v2:
+            #     return v1
+            # else:
+            #     return v1+ v2
+
+            return aux(a,b,arr,i-1,j) + aux(a,b,arr,i,j-1)
 
 '''
 the following class is to perform unit tests to verify if the methods are working appropriately.
@@ -158,7 +144,14 @@ if __name__ == '__main__':
     a = "xyxyz"
     b = "xyabxyc"
     # unittest.main()
-    print()
-    arr = lcs1(a,b)
+    print() 
+    lcs1(a,b)
     print()
     lcs1("abcd", "dcba")
+    print()
+    lcs1("kannan", "ranganathan")
+
+    lcs1("bdcaba", "abcbdab")
+    lcs1("abcbdab", "bdcaba")
+
+    lcs1("abc", "cba")
